@@ -2,7 +2,7 @@ Firmware designed for the pico int the IDC project
 
 # Building:
   
-1. create build directory
+1. create and enter desired build directory
 2. run `cmake ..`
 3. run `make`
 
