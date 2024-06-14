@@ -8,7 +8,7 @@ Firmware designed for the pico int the IDC project
 
 # Flashing wiht picotool:
 
-1. build [picotool](https://github.com/raspberrypi/picotool))
+1. build [picotool](https://github.com/raspberrypi/picotool)
 2. run `picotool load -f PicoMeasure.uf2` 
 
 # Flahsing without picotool
