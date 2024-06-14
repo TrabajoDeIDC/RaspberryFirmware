@@ -14,16 +14,22 @@ set(PICO_EXAMPLES_PATH ${Project_SOURCE_DIR})
 set(PICO_BOARD pico_w)
 
 
-file(GLOB_RECURSE C_FILES ${CMAKE_SOURCE_DIR}/src/*.c)
+file(GLOB_RECURSE C_FILES 
+	${CMAKE_SOURCE_DIR}/src/*.c
+	${CMAKE_SOURCE_DIR}/lib/picoSensors/*.c
+	)
 
 pico_sdk_init()
 
-add_executable(PicoMeasure ${C_FILES})
+add_executable(picoMeasure ${C_FILES})
 
-pico_enable_stdio_usb(PicoMeasure 1)
-pico_enable_stdio_uart(PicoMeasure 0)
+pico_enable_stdio_usb(picoMeasure 1)
+pico_enable_stdio_uart(picoMeasure 0)
 
-pico_add_extra_outputs(PicoMeasure)
+pico_add_extra_outputs(picoMeasure)
 
-target_include_directories(PicoMeasure PRIVATE ${CMAKE_SOURCE_DIR}/inc)
-target_link_libraries(PicoMeasure pico_cyw43_arch_lwip_threadsafe_background pico_stdlib)
+target_include_directories(picoMeasure PRIVATE 
+	${CMAKE_SOURCE_DIR}/inc
+	${CMAKE_SOURCE_DIR}/lib/picoSensors/inc
+	)
+target_link_libraries(picoMeasure pico_cyw43_arch_lwip_threadsafe_background pico_stdlib)
