@@ -1,0 +1,2 @@
+int initAirQuality();
+int get();
