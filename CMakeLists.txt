@@ -13,7 +13,6 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(PICO_EXAMPLES_PATH ${Project_SOURCE_DIR})
 set(PICO_BOARD pico_w)
 
-
 file(GLOB_RECURSE C_FILES 
 	${CMAKE_SOURCE_DIR}/src/*.c
 	${CMAKE_SOURCE_DIR}/lib/picoSensors/*.c
@@ -22,6 +21,12 @@ file(GLOB_RECURSE C_FILES
 pico_sdk_init()
 
 add_executable(picoMeasure ${C_FILES})
+
+# Used to grab SSID and PASSWORD sets when running cmake and use it on main.c
+target_compile_definitions(picoMeasure PRIVATE
+	WIFI_SSID=\"${WIFI_SSID}\"
+	WIFI_PASSWORD=\"${WIFI_PASSWORD}\"
+)
 
 pico_enable_stdio_usb(picoMeasure 1)
 pico_enable_stdio_uart(picoMeasure 0)
