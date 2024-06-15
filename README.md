@@ -7,7 +7,7 @@ Firmware designed for the pico of the IDC project
 > You must set your Wi-Fi SSID in 'SSID' and your Wi-Fi password in 'PASS'
 3. run `make` inside your build directory
 
-# Flashing wiht picotool:
+# Flashing with picotool:
 
 1. build [picotool](https://github.com/raspberrypi/picotool)
 2. run `picotool load -f PicoMeasure.uf2` 
