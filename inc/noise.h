@@ -8,5 +8,5 @@ typedef struct KY038Reader {
   int *noiseDetected;
 } KY038Reader;
 
-int KY038_init();
-int KY038_read();
+int KY038_init(int digPin, int anPin, uint16_t *noiselvl, int *noiseDetected);
+int KY038_read(int id);
