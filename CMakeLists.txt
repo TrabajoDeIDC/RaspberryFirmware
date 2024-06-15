@@ -32,4 +32,4 @@ target_include_directories(picoMeasure PRIVATE
 	${CMAKE_SOURCE_DIR}/inc
 	${CMAKE_SOURCE_DIR}/lib/picoSensors/inc
 	)
-target_link_libraries(picoMeasure pico_cyw43_arch_lwip_threadsafe_background pico_stdlib)
+target_link_libraries(picoMeasure pico_cyw43_arch_lwip_threadsafe_background pico_stdlib hardware_adc)

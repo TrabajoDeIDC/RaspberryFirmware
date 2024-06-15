@@ -20,21 +20,21 @@
 #include "pico/time.h"
 
 // up to 4 sensors connected at once
-int count = 0;
+int DHT22ReaderCount = 0;
 DHT22Reader DHT22Readers[DHT22READERS_MAX];
 
 int DHT22_init(int pin, float *temperature, float *humidity) {
-  if (DHT22Readers[count].pin == 0) {
-    DHT22Readers[count].pin = pin;
+  if (DHT22Readers[DHT22ReaderCount].pin == 0) {
+    DHT22Readers[DHT22ReaderCount].pin = pin;
 
-    DHT22Readers[count].temperature = temperature;
-    *(DHT22Readers[count].temperature) = 0;
+    DHT22Readers[DHT22ReaderCount].temperature = temperature;
+    *(DHT22Readers[DHT22ReaderCount].temperature) = 0;
 
-    DHT22Readers[count].humidity = humidity;
-    *(DHT22Readers[count].humidity) = 0;
+    DHT22Readers[DHT22ReaderCount].humidity = humidity;
+    *(DHT22Readers[DHT22ReaderCount].humidity) = 0;
 
     gpio_init(pin);
-    return count++;
+    return DHT22ReaderCount++;
   }
   return -1;
 }
