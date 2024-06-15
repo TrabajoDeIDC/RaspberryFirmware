@@ -1,4 +1,4 @@
-/**
+/*f
  * @file DHT22_Reader.h
  * @brief DHT22 Sensor Reader
  *
