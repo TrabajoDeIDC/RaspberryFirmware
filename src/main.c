@@ -3,8 +3,12 @@
 #include <stdio.h>
 #include "pico/binary_info.h"
 #include "hardware/gpio.h"
+#include "lwip/init.h"
+#include "lwip/tcp.h"
+#include "lwip/timeouts.h"
 
 #include "DHT22_Reader.h"
+#include "data_sender.h"
 
 #define GPIO_ON 1
 #define GPIO_OFF 0
@@ -33,11 +37,20 @@ int main() {
   }
   printf("Connected succesfully to %s\n", WIFI_SSID);
 
+  lwip_init();
+  puts("TCP/IP stack initialise successfully");
+  if (connect_to_server() == 1) {
+    return 1;
+  }
+
   while (true) {
+    puts("I am here");
     cyw43_arch_gpio_put(LED_PIN, GPIO_ON);
     sleep_ms(500);
     cyw43_arch_gpio_put(LED_PIN, GPIO_OFF);
     sleep_ms(500);
+
+    sys_check_timeouts(); // Check lwip timeouts
 
     int id = DHT22_init(18, &temperature, &humidity);
 
