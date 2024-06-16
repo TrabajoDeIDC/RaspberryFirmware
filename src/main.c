@@ -44,7 +44,7 @@ int main() {
     DHT22_read(dht22_id);
     KY038_read(ky038_id);
 
-    printf("Temperature: %f\n, Humidity: %f\n", temperature, humidity);
+    printf("Temperature: %f\nHumidity: %f\n", temperature, humidity);
     printf("Noise Level: %d\n", noise_level);
     printf("\n");
   }
