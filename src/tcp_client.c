@@ -12,7 +12,9 @@ ip_addr_t ips[4];
 float *msg_data[4];
 int ids[4] = {0, 1, 2, 3};
 
-#define http_request "GET / HTTP/1.1\r\nValue: %.2f\r\n\r\n"
+#define http_request                                                           \
+  "POST /data?lat=12.34&lng=56.78&temp=22.5&humidity=60&air=30&noise=50 "      \
+  "HTTP/1.1\r\nHost: localhost:8080\r\nConnection: close\r\n\r\n"
 
 int cont = 0;
 
