@@ -11,32 +11,51 @@ struct tcp_pcb *pcb[4];
 ip_addr_t ips[4];
 float *msg_data[4];
 int ids[4] = {0, 1, 2, 3};
+bool connected_flag[4] = {false, false, false, false};
 
 #define http_request                                                           \
   "POST /data?lat=12.34&lng=56.78&temp=22.5&humidity=60&air=30&noise=50 "      \
   "HTTP/1.1\r\nHost: localhost:8080\r\nConnection: close\r\n\r\n"
 
-int cont = 0;
-
 int tcp_client_init(float *data, int ip1, int ip2, int ip3, int ip4, int port) {
-  pcb[cont] = tcp_new();
-  msg_data[cont] = data;
 
-  if (pcb[cont] == NULL) {
+  int id = 0;
+  bool searching = true;
+
+  while (searching) {
+    if (connected_flag[id] == false) {
+      pcb[id] = tcp_new();
+      searching = false;
+      printf("Connection %d created haha\n", id);
+    } else {
+      id++;
+    }
+    if (id == 4) {
+      printf("No more connections available\n");
+      return -1;
+    }
+  }
+
+  msg_data[id] = data;
+
+  if (pcb[id] == NULL) {
+    printf("Error creating connection\n");
     return -1;
   }
 
-  IP4_ADDR(&ips[cont], ip1, ip2, ip3, ip4);
+  IP4_ADDR(&ips[id], ip1, ip2, ip3, ip4);
 
-  tcp_arg(pcb[cont], &ids[cont]);
-  tcp_recv(pcb[cont], mssg_recv);
+  tcp_arg(pcb[id], &ids[id]);
+  tcp_recv(pcb[id], mssg_recv);
 
-  err_t err = tcp_connect(pcb[cont], &ips[cont], port, connected);
+  err_t err = tcp_connect(pcb[id], &ips[id], port, connected);
 
-  if (err != ERR_OK)
+  if (err != ERR_OK) {
+    printf("Error connecting\n");
     return -1;
+  }
 
-  return cont++;
+  return id;
 }
 
 err_t connected(void *arg, struct tcp_pcb *tpcb, err_t err) {
@@ -70,13 +89,10 @@ void send_data(int id) {
 err_t mssg_recv(void *arg, struct tcp_pcb *tpcb, struct pbuf *p, err_t err) {
   int id = *(int *)arg;
 
-  if (p == NULL) {
-    tcp_close(tpcb);
-    printf("Connection %d closed\n", id);
-    return ERR_OK;
-  }
   printf("Message received from %d:\n%s", id, (char *)p->payload);
 
+  tcp_close(tpcb);
+  connected_flag[id] = false;
   return ERR_OK;
 }
 

@@ -87,20 +87,14 @@ int main() {
   int mq135_id =
       MQ135_init(MQ135_DIG_PIN, MQ135_ADC_PIN, &gasLevel, &gasDetected);
 
-  int tpc1 = tcp_client_init(&data, 192, 168, 1, 155, 4000);
-  if (tpc1 < 0) {
-    printf("Failed to connect to server\n");
-    return 1;
-  }
-
-  int tpc2 = tcp_client_init(&data, 192, 168, 1, 1, 80);
-  if (tpc2 < 0) {
-    printf("Failed to connect to server\n");
-    return 1;
-  }
-
   while (1) {
     cyw43_arch_poll();
+
+    int tpc1 = tcp_client_init(&data, 192, 168, 1, 155, 8080);
+    if (tpc1 < 0) {
+      printf("Failed to connect to server\n");
+      return 1;
+    }
 
     DHT22_read(dht22_id);
     KY038_read(ky038_id);
@@ -114,8 +108,8 @@ int main() {
     printf("Gas Level: %d\n", gasLevel);
 
     send_data(tpc1);
-    send_data(tpc2);
     data++;
+
     sleep_ms(2000);
   }
 
