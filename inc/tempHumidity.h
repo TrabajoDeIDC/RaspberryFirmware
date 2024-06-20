@@ -1,2 +1,0 @@
-int initTempHumidity();
-int get();

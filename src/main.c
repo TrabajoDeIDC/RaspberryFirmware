@@ -7,6 +7,7 @@
 #include <string.h>
 
 #include "DHT22_Reader.h"
+#include "air_quality.h"
 #include "noise.h"
 #include "tcp_client.h"
 
@@ -20,7 +21,19 @@
 #define KY038_ADC_PIN 26
 #define KY038_GPIO_PIN 22
 
+#define MQ135_ADC_PIN 28
+#define MQ135_DIG_PIN 15
+
 float data = 0.0;
+
+float temperature;
+float humidity;
+
+uint16_t noiselvl;
+int noiseDetected;
+
+uint16_t gasLevel;
+int gasDetected;
 
 void set_hostname(const char *hostname) {
   cyw43_arch_lwip_begin();
@@ -66,23 +79,37 @@ int main() {
     return -1;
   }
 
-  int tpc1 = tcp_client_init(&data, 192, 168, 1, 155, 4000);
-  if (tpc1 < 0) {
-    printf("Failed to connect to server\n");
-    return 1;
-  }
+  int dht22_id = DHT22_init(DHT22_DATA_PIN, &temperature, &humidity);
 
-  int tpc2 = tcp_client_init(&data, 192, 168, 1, 1, 80);
-  if (tpc2 < 0) {
-    printf("Failed to connect to server\n");
-    return 1;
-  }
+  int ky038_id =
+      KY038_init(KY038_GPIO_PIN, KY038_ADC_PIN, &noiselvl, &noiseDetected);
+
+  int mq135_id =
+      MQ135_init(MQ135_DIG_PIN, MQ135_ADC_PIN, &gasLevel, &gasDetected);
 
   while (1) {
     cyw43_arch_poll();
+
+    int tpc1 = tcp_client_init(&data, 192, 168, 1, 155, 8080);
+    if (tpc1 < 0) {
+      printf("Failed to connect to server\n");
+      return 1;
+    }
+
+    DHT22_read(dht22_id);
+    KY038_read(ky038_id);
+    MQ135_read(mq135_id);
+
+    printf("Temperature: %f\n", temperature);
+    printf("Humidity: %f\n", humidity);
+
+    printf("Noise Level: %d\n", noiselvl);
+
+    printf("Gas Level: %d\n", gasLevel);
+
     send_data(tpc1);
-    send_data(tpc2);
     data++;
+
     sleep_ms(2000);
   }
 
