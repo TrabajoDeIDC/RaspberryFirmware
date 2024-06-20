@@ -68,6 +68,11 @@ void send_data(int id) {
 err_t mssg_recv(void *arg, struct tcp_pcb *tpcb, struct pbuf *p, err_t err) {
   int id = *(int *)arg;
 
+  if (p == NULL) {
+    tcp_close(tpcb);
+    printf("Connection %d closed\n", id);
+    return ERR_OK;
+  }
   printf("Message received from %d:\n%s", id, (char *)p->payload);
 
   return ERR_OK;
