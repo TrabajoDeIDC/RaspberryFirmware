@@ -7,6 +7,7 @@
 #include <string.h>
 
 #include "DHT22_Reader.h"
+#include "air_quality.h"
 #include "noise.h"
 #include "tcp_client.h"
 
@@ -21,6 +22,9 @@
 #define KY038_GPIO_PIN 22
 
 float data = 0.0;
+
+float *temperature;
+float *humidity;
 
 void set_hostname(const char *hostname) {
   cyw43_arch_lwip_begin();
@@ -66,6 +70,8 @@ int main() {
     return -1;
   }
 
+  int dht22_id = DHT22_init(DHT22_DATA_PIN, temperature, humidity);
+
   int tpc1 = tcp_client_init(&data, 192, 168, 1, 155, 4000);
   if (tpc1 < 0) {
     printf("Failed to connect to server\n");
@@ -80,6 +86,12 @@ int main() {
 
   while (1) {
     cyw43_arch_poll();
+
+    DHT22_read(dht22_id);
+
+    printf("Temperature: %f\n", *temperature);
+    printf("Humidity: %f\n", *humidity);
+
     send_data(tpc1);
     send_data(tpc2);
     data++;
