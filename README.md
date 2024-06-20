@@ -1,3 +1,5 @@
+video: https://drive.google.com/file/d/1o7DREmWxKpv8F1eTCW6poKYjO5VHU0gB/view?usp=sharing
+
 Firmware designed for the pico of the IDC project
 
 <img width="601" alt="pinout" src="https://github.com/TrabajoDeIDC/RaspberryFirmware/assets/98914819/b32fcf81-e67c-49e7-bd70-5c9649401aa7">
