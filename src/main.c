@@ -24,7 +24,7 @@
 #define MQ135_ADC_PIN 28
 #define MQ135_DIG_PIN 15
 
-float data = 0.0;
+float data[] = {39.45, -0.38, 0, 0, 0, 0};
 
 float temperature;
 float humidity;
@@ -90,7 +90,7 @@ int main() {
   while (1) {
     cyw43_arch_poll();
 
-    int tpc1 = tcp_client_init(&data, 192, 168, 1, 155, 8080);
+    int tpc1 = tcp_client_init(data, 192, 168, 1, 155, 8080);
     if (tpc1 < 0) {
       printf("Failed to connect to server\n");
       return 1;
@@ -100,6 +100,11 @@ int main() {
     KY038_read(ky038_id);
     MQ135_read(mq135_id);
 
+    data[2] = temperature;
+    data[3] = humidity;
+    data[4] = (float)gasLevel;
+    data[5] = (float)noiselvl;
+
     printf("Temperature: %f\n", temperature);
     printf("Humidity: %f\n", humidity);
 
@@ -108,7 +113,6 @@ int main() {
     printf("Gas Level: %d\n", gasLevel);
 
     send_data(tpc1);
-    data++;
 
     sleep_ms(2000);
   }
