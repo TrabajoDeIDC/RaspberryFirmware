@@ -14,7 +14,7 @@ int ids[4] = {0, 1, 2, 3};
 bool connected_flag[4] = {false, false, false, false};
 
 #define http_request                                                           \
-  "POST /data?lat=12.34&lng=56.78&temp=22.5&humidity=60&air=30&noise=50 "      \
+  "POST /data?lat=%f&lng=%f8&temp=%f&humidity=%f&air=%f&noise=%f "             \
   "HTTP/1.1\r\nHost: localhost:8080\r\nConnection: close\r\n\r\n"
 
 int tcp_client_init(float *data, int ip1, int ip2, int ip3, int ip4, int port) {
@@ -74,7 +74,8 @@ void send_data(int id) {
     return;
 
   char *http_req = (char *)malloc(sizeof(http_request) * 2);
-  sprintf(http_req, http_request, *msg_data[id]);
+  sprintf(http_req, http_request, msg_data[id][0], msg_data[id][1],
+          msg_data[id][2], msg_data[id][3], msg_data[id][4], msg_data[id][5]);
 
   struct pbuf *p;
   p = pbuf_alloc(PBUF_TRANSPORT, strlen(http_req), PBUF_RAM);
